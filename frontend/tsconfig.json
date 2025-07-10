@@ -1,0 +1,30 @@
+﻿{
+    "include":  [
+                    "next-env.d.ts",
+                    "**/*.ts",
+                    "**/*.tsx"
+                ],
+    "exclude":  [
+                    "node_modules"
+                ],
+    "compilerOptions":  {
+                            "noEmit":  true,
+                            "moduleResolution":  "bundler",
+                            "strict":  true,
+                            "module":  "esnext",
+                            "incremental":  true,
+                            "forceConsistentCasingInFileNames":  true,
+                            "isolatedModules":  true,
+                            "skipLibCheck":  true,
+                            "allowJs":  true,
+                            "target":  "es5",
+                            "resolveJsonModule":  true,
+                            "esModuleInterop":  true,
+                            "lib":  [
+                                        "dom",
+                                        "dom.iterable",
+                                        "es6"
+                                    ],
+                            "jsx":  "preserve"
+                        }
+}
