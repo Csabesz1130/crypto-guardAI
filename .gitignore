@@ -1,0 +1,71 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+backend/venv/
+backend/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Build outputs
+frontend/.next/
+frontend/out/
+backend/dist/
+build/
+dist/
+
+# Environment files
+.env
+.env.local
+.env.production
+.env.development
+*.env
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE/Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.tmp
+
+# Logs and debug
+*.log
+npm-debug.log*
+yarn-debug.log*
+debug.log
+
+# Database files
+*.sqlite
+*.db
+*.sql
+
+# ML Models and large files
+*.pkl
+*.joblib
+backend/app/ml/models/*.pkl
+*.model
+*.h5
+
+# Testing and coverage
+coverage/
+.coverage
+*.test.js
+*.test.ts
+*.test.tsx
+jest-cache/
+
+# Docker and deployment
+docker-compose.override.yml
+*.dockerignore
+
+# Miscellaneous
+temp/
+tmp/
+.cache/
+*.bak
+*.backup
