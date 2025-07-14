@@ -49,10 +49,10 @@ export default function DashboardPage() {
   return (
     <div className="flex h-screen bg-background">
       <DashboardSidebar />
-      
+
       <div className="flex-1 flex flex-col overflow-hidden">
         <DashboardHeader />
-        
+
         <main className="flex-1 overflow-auto p-6">
           <div className="space-y-6">
             {/* Alert Section */}
@@ -85,8 +85,8 @@ export default function DashboardPage() {
               </TabsContent>
 
               <TabsContent value="transactions" className="space-y-4">
-                <TransactionMonitor 
-                  transactions={sampleTransactions} 
+                <TransactionMonitor
+                  transactions={sampleTransactions}
                   title="All Transactions"
                 />
               </TabsContent>
