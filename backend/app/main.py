@@ -33,5 +33,38 @@ async def health_check():
         "timestamp": "2025-07-11T01:20:00Z"
     }
 
+# Temporary sample data until database integration
+sample_transactions = [
+    {
+        "id": "1",
+        "hash": "0x1234567890abcdef",
+        "amount": 0.5,
+        "currency": "ETH",
+        "riskLevel": "LOW",
+        "timestamp": "2025-07-14T20:00:00Z",
+        "from": "0xabc123",
+        "to": "0xdef456",
+        "status": "confirmed",
+    },
+    {
+        "id": "2",
+        "hash": "0xfedcba0987654321",
+        "amount": 1.2,
+        "currency": "BTC",
+        "riskLevel": "HIGH",
+        "timestamp": "2025-07-14T20:05:00Z",
+        "from": "0x789xyz",
+        "to": "0x456abc",
+        "status": "pending",
+    },
+]
+
+
+@app.get("/transactions")
+async def list_transactions():
+    """Return a mock list of recent transactions.
+    Replace with database-backed implementation later."""
+    return sample_transactions
+
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000, reload=True)
