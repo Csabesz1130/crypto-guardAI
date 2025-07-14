@@ -9,35 +9,16 @@ import { FraudDetectionCard } from '@/components/security/fraud-detection-card'
 import { SecurityAlert } from '@/components/security/security-alert'
 import { FraudTrendChart } from '@/components/charts/fraud-trend-chart'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-
-// Sample data for demonstration (replace with real API data)
-const sampleTransactions = [
-  {
-    id: '1',
-    hash: '0x1234567890abcdef',
-    amount: '0.5',
-    currency: 'ETH',
-    riskLevel: 'LOW' as const,
-    timestamp: new Date().toISOString(),
-    from: '0xabc123',
-    to: '0xdef456',
-    status: 'confirmed' as const
-  },
-  {
-    id: '2',
-    hash: '0xfedcba0987654321',
-    amount: '1.2',
-    currency: 'BTC',
-    riskLevel: 'HIGH' as const,
-    timestamp: new Date().toISOString(),
-    from: '0x789xyz',
-    to: '0x456abc',
-    status: 'pending' as const
-  }
-]
+import { useTransactionStore } from '@/stores/transaction-store'
+import { LoadingSpinner } from '@/components/ui/loading-spinner'
 
 export default function DashboardPage() {
   const [apiStatus, setApiStatus] = useState<string>('Connecting...')
+  const { transactions, loading, error, fetchTransactions } = useTransactionStore()
+
+  useEffect(() => {
+    fetchTransactions()
+  }, [fetchTransactions])
 
   useEffect(() => {
     fetch('http://localhost:8000/health')
@@ -80,15 +61,23 @@ export default function DashboardPage() {
                     status="suspicious"
                     details="Multiple risk factors detected including high transaction amount and new address activity."
                   />
-                  <TransactionMonitor transactions={sampleTransactions} />
+                  {loading ? (
+                    <LoadingSpinner />
+                  ) : (
+                    <TransactionMonitor transactions={transactions} />
+                  )}
                 </div>
               </TabsContent>
 
               <TabsContent value="transactions" className="space-y-4">
-                <TransactionMonitor
-                  transactions={sampleTransactions}
-                  title="All Transactions"
-                />
+                {loading ? (
+                  <LoadingSpinner />
+                ) : (
+                  <TransactionMonitor
+                    transactions={transactions}
+                    title="All Transactions"
+                  />
+                )}
               </TabsContent>
 
               <TabsContent value="analytics" className="space-y-4">
