@@ -6,6 +6,10 @@ from pydantic import BaseModel
 from datetime import datetime, timedelta
 import jwt
 from fastapi import HTTPException, status
+from sqlalchemy.orm import Session
+
+from .database.database import SessionLocal, engine, Base
+from .models.transaction import Transaction
 
 SECRET_KEY = "cryptoguard-dev-secret"
 ALGORITHM = "HS256"
@@ -77,6 +81,9 @@ sample_transactions = [
     },
 ]
 
+# Create tables if they don't exist (works with SQLite dev)
+Base.metadata.create_all(bind=engine)
+
 
 class LoginRequest(BaseModel):
     username: str
@@ -121,15 +128,51 @@ async def health_check():
 
 @app.get("/transactions")
 async def list_transactions():
-    """Return a mock list of recent transactions.
-    Replace with database-backed implementation later."""
-    return sample_transactions
+    """Return transactions from the SQLite database."""
+    db: Session = SessionLocal()
+    try:
+        rows = db.query(Transaction).order_by(Transaction.createdAt.desc()).limit(100).all()
+        # convert SQLAlchemy objects to dict
+        return [
+            {
+                "id": t.id,
+                "hash": t.hash,
+                "amount": t.amount,
+                "currency": t.currency,
+                "riskLevel": t.riskLevel,
+                "timestamp": t.timestamp.isoformat(),
+                "from": t.from_addr,
+                "to": t.to_addr,
+                "status": t.status,
+            }
+            for t in rows
+        ]
+    finally:
+        db.close()
 
 # Example endpoint to create a new transaction and broadcast it (for testing)
 @app.post("/transactions")
 async def create_transaction(tx: dict):
     """Add the incoming transaction to in-memory list and broadcast via WebSocket."""
-    sample_transactions.insert(0, tx)
+    # Persist to DB then broadcast
+    db: Session = SessionLocal()
+    try:
+        db_obj = Transaction(
+            id=tx.get("id"),
+            hash=tx.get("hash"),
+            amount=tx.get("amount"),
+            currency=tx.get("currency"),
+            riskLevel=tx.get("riskLevel"),
+            timestamp=datetime.fromisoformat(tx.get("timestamp").replace('Z','+00:00')) if isinstance(tx.get("timestamp"), str) else tx.get("timestamp"),
+            from_addr=tx.get("from"),
+            to_addr=tx.get("to"),
+            status=tx.get("status"),
+        )
+        db.add(db_obj)
+        db.commit()
+    finally:
+        db.close()
+
     # Broadcast to connected Socket.IO clients
     await broadcast_transaction(tx)
     return {"status": "ok"}
