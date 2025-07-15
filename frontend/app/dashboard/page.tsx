@@ -12,10 +12,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useTransactionStore } from '@/stores/transaction-store'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
 import { ErrorMessage } from '@/components/ui/error-message'
+import { useTransactionWebSocket } from '@/hooks/use-websocket'
 
 export default function DashboardPage() {
   const [apiStatus, setApiStatus] = useState<string>('Connecting...')
   const { transactions, loading, error, fetchTransactions } = useTransactionStore()
+
+  // establish WebSocket connection once per page load
+  useTransactionWebSocket()
 
   useEffect(() => {
     fetchTransactions()

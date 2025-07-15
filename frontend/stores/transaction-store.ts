@@ -17,6 +17,7 @@ interface TransactionState {
   loading: boolean
   error?: string
   fetchTransactions: () => Promise<void>
+  addTransaction: (tx: Transaction) => void
 }
 
 export const useTransactionStore = create<TransactionState>((set) => ({
@@ -34,5 +35,7 @@ export const useTransactionStore = create<TransactionState>((set) => ({
     } catch (e: any) {
       set({ error: e.message ?? 'Failed to fetch transactions', loading: false })
     }
-  }
+  },
+  addTransaction: (tx: Transaction) =>
+    set((state) => ({ transactions: [tx, ...state.transactions] })),
 }))
