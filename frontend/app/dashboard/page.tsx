@@ -11,6 +11,7 @@ import { FraudTrendChart } from '@/components/charts/fraud-trend-chart'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useTransactionStore } from '@/stores/transaction-store'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
+import { ErrorMessage } from '@/components/ui/error-message'
 
 export default function DashboardPage() {
   const [apiStatus, setApiStatus] = useState<string>('Connecting...')
@@ -61,7 +62,9 @@ export default function DashboardPage() {
                     status="suspicious"
                     details="Multiple risk factors detected including high transaction amount and new address activity."
                   />
-                  {loading ? (
+                  {error ? (
+                    <ErrorMessage message={error} />
+                  ) : loading ? (
                     <LoadingSpinner />
                   ) : (
                     <TransactionMonitor transactions={transactions} />
@@ -70,7 +73,9 @@ export default function DashboardPage() {
               </TabsContent>
 
               <TabsContent value="transactions" className="space-y-4">
-                {loading ? (
+                {error ? (
+                  <ErrorMessage message={error} />
+                ) : loading ? (
                   <LoadingSpinner />
                 ) : (
                   <TransactionMonitor

@@ -26,7 +26,8 @@ export const useTransactionStore = create<TransactionState>((set) => ({
   fetchTransactions: async () => {
     set({ loading: true, error: undefined })
     try {
-      const res = await fetch('http://localhost:8000/transactions')
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+      const res = await fetch(`${baseUrl}/transactions`)
       if (!res.ok) throw new Error(`Status ${res.status}`)
       const data = await res.json()
       set({ transactions: data, loading: false })
