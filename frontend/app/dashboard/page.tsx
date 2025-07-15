@@ -7,7 +7,12 @@ import { StatsOverview } from '@/components/dashboard/stats-overview'
 import { TransactionMonitor } from '@/components/dashboard/transaction-monitor'
 import { FraudDetectionCard } from '@/components/security/fraud-detection-card'
 import { SecurityAlert } from '@/components/security/security-alert'
-import { FraudTrendChart } from '@/components/charts/fraud-trend-chart'
+import dynamic from 'next/dynamic'
+
+const FraudTrendChart = dynamic(() => import('@/components/charts/fraud-trend-chart').then(m => m.FraudTrendChart), {
+  ssr: false,
+  loading: () => <LoadingSpinner />
+})
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useTransactionStore } from '@/stores/transaction-store'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'

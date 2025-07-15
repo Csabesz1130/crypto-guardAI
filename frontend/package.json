@@ -36,7 +36,8 @@
         "lint": "next lint",
         "build": "next build",
         "dev": "next dev",
-        "start": "next start"
+        "start": "next start",
+        "test": "jest"
     },
     "devDependencies": {
         "@testing-library/jest-dom": "^6.6.3",
