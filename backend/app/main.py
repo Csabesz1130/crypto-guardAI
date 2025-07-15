@@ -2,6 +2,15 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import socketio
+from pydantic import BaseModel
+from datetime import datetime, timedelta
+import jwt
+from fastapi import HTTPException, status
+
+SECRET_KEY = "cryptoguard-dev-secret"
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 60
+
 
 app = FastAPI(
     title="CryptoGuard AI API",
@@ -67,6 +76,30 @@ sample_transactions = [
         "status": "pending",
     },
 ]
+
+
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+
+# Simple in-memory user list for demo purposes
+fake_users = {
+    "admin": {
+        "password": "password"
+    }
+}
+
+
+@app.post("/auth/login")
+async def login(data: LoginRequest):
+    user = fake_users.get(data.username)
+    if not user or user["password"] != data.password:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
+
+    expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    to_encode = {"sub": data.username, "exp": expire}
+    token = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return {"access_token": token, "token_type": "bearer"}
 
 
 @app.get("/")

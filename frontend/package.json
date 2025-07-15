@@ -4,6 +4,7 @@
     "version": "1.0.0",
     "dependencies": {
         "@hookform/resolvers": "^5.1.1",
+        "@prisma/client": "^6.12.0",
         "@radix-ui/react-alert-dialog": "^1.1.14",
         "@radix-ui/react-avatar": "^1.1.10",
         "@radix-ui/react-context-menu": "^2.2.15",
@@ -47,6 +48,7 @@
         "eslint-config-next": "15.3.5",
         "eslint-plugin-testing-library": "^7.5.4",
         "jest": "^30.0.4",
-        "jest-environment-jsdom": "^30.0.4"
+        "jest-environment-jsdom": "^30.0.4",
+        "prisma": "^6.12.0"
     }
 }
